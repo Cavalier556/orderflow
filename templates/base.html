@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>OrderFlow | Sistema de Ventas</title>
+    <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+    <script src="https://cdn.jsdelivr.net/npm/htmx.org@2.0.8/dist/htmx.min.js"
+        integrity="sha384-/TgkGk7p307TH7EXJDuUlgG3Ce1UVolAOFopFekQkkXihi5u/6OCvVKyz1W+idaz"
+        crossorigin="anonymous"></script>
+</head>
+
+<body>
+    {% if request.user.is_authenticated %}
+    <header class="border-b-2 border-gray-200 mb-8 py-1">
+        <div class="flex flex-wrap items-center justify-between w-screen px-12 mx-auto">
+            <a href="{%url 'home'%}" class="flex items-center">
+                <span class="self-center text-xl font-semibold whitespace-nowrap">OrderFlow</span>
+            </a>
+            <div class="items-center justify-between w-full lg:flex lg:w-auto">
+                <ul class="flex flex-col mt-4 font-medium lg:flex-row lg:space-x-8 lg:mt-0">
+                    <a href="{%url 'home'%}"><i class="bi bi-house-fill"></i> Mesas</a>
+                    <a href="{%url 'platos'%}"><i class="bi bi-house-fill"></i> Platos</a>
+                </ul>
+            </div>
+            <div>
+
+                <span>Hola, {{request.user | title}}</span>
+                <a href="{% url 'logout' %}" class="underline text-blue-700">Cerrar Sesión</a>
+
+            </div>
+        </div>
+    </header>
+    {% endif %}
+
+    <main>
+        <div class="">
+            {% if messages %}
+            {% for message in messages %}
+            <div class="alert alert-{{message.tags}}">
+                {{message}}
+            </div>
+            {% endfor %}
+            {% endif %}
+
+            {% block content %}
+            {% endblock %}
+        </div>
+    </main>
+</body>
+
+</html>

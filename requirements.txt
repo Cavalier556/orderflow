@@ -1,0 +1,5 @@
+asgiref==3.11.0
+Django==6.0.1
+django-environ==0.12.0
+fpdf==1.7.2
+sqlparse==0.5.5

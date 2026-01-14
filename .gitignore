@@ -1,0 +1,8 @@
+.env
+.venv
+db.sqlite3
+output.pdf
+*.pyc
+__pycache__/
+/media/
+/static/

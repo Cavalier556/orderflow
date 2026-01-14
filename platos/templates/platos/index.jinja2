@@ -1,0 +1,100 @@
+{%extends 'base.html'%}
+{% block content %}
+
+<div class="mx-2 md:mx-12">
+    <div class="rounded-lg border border-gray-200 bg-white shadow-sm p-6">
+        <h3 class="text-xl">Crear un nuevo platillo</h3>
+        <div class="pt-6">
+            <form class="flex flex-col sm:flex-row gap-4 bg-white" action="/platos/" method="POST" id="form-new-plato">
+                {% csrf_token %}
+                <input type="text"
+                    class="form-control shadow appearance-none border rounded py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                    name="nombre" placeholder="Nombre" required />
+                <div class="shadow border rounded pl-3 flex justify-between">
+                    <select name="categoria" id="categoria" class="py-2 w-fit">
+                        {% for categoria in categorias %}
+                        <option value="{{categoria.id}}" data-price="{{categoria.precio}}">{{categoria.nombre}}</option>
+                        {% endfor %}
+                    </select>
+                    <button onclick="modal.showModal()"
+                        class="bg-blue-500 hover:bg-blue-700 text-white font-medium py-2 px-4 rounded">+</button>
+                </div>
+                <input type="text"
+                    class="form-control shadow appearance-none border rounded py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                    name="precio" placeholder="Precio unitario" required />
+                <button type="submit"
+                    class="bg-blue-500 hover:bg-blue-700 text-white font-medium py-2 px-4 rounded">Crear</button>
+            </form>
+        </div>
+    </div>
+
+
+    <div class="mt-8 rounded-lg border border-gray-200 bg-white shadow-sm p-6">
+        <h3 class="text-xl">
+            Lista de Platillos
+        </h3><br>
+        <div class="mx-auto flex mt-2">
+            <table class="w-full text-sm border-gray-200" id="search-results">
+                <thead>
+                    <tr class="border-b border-gray-200 transition-colors hover:bg-gray-300/50">
+                        <th class="px-4 py-2 font-medium text-gray-700 text-left ">Categoria</th>
+                        <th class="px-4 py-2 font-medium text-gray-700 text-left">Nombre</th>
+                        <th class="px-4 py-2 font-medium text-gray-700 text-right">Precio Unitario</th>
+                        <th class="px-4 py-2 font-medium text-gray-700 text-left w-[40px]">Borrar</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for plato in platos %}
+                    <tr class="border-b border-gray-200 transition-colors hover:bg-gray-200/50">
+                        <td class="px-4 py-2">{{ plato.categoria.nombre }}</td>
+                        <td class="px-4 py-2">{{ plato.nombre }}</td>
+                        <td class="px-4 py-2 text-right">{{ plato.precio }}</td>
+                        <td class="px-4 py-2 text-center">
+                            <button onclick="mostraralerta()"
+                                class="cursor-pointer inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-md bg-red-600 text-white hover:bg-red-600/90 h-8 w-8">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
+                                    fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                                    stroke-linejoin="round" class="lucide lucide-trash2 h-4 w-4">
+                                    <path d="M3 6h18"></path>
+                                    <path d="M19 6v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6"></path>
+                                    <path d="M8 6V4c0-1 1-2 2-2h4c1 0 2 1 2 2v2"></path>
+                                    <line x1="10" x2="10" y1="11" y2="17"></line>
+                                    <line x1="14" x2="14" y1="11" y2="17"></line>
+                                </svg>
+                            </button>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+</div>
+
+<dialog class="p-6 bg-zinc-100  rounded-lg my-auto mx-auto shadow-lg w-[400px]" id="modal">
+    <form hx-post="/categorias/" hx-target="#form-new-plato" hx-select="#form-new-plato">
+        {% csrf_token %}
+        <div class="max-w-80 flex flex-col text-black rounded select-none space-y-2">
+            <div class="flex flex-row justify-between mb-4">
+                <p class="text-lg text-slate-800 font-medium items-center gap-x-2">Nueva Categoria</p>
+                <button onclick="modal.close()"
+                    class="text-gray-600 hover:text-gray-900 text-2xl text-right">&times;</button>
+            </div>
+            <input type="text"
+                class="form-control shadow appearance-none border rounded py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                name="nombre" placeholder="Nombre" required />
+            <button type="submit" class="bg-blue-500 hover:bg-blue-700 text-white font-medium py-2 px-4 rounded"
+                onclick="modal.close()">Crear</button>
+
+        </div>
+    </form>
+</dialog>
+
+<script>
+    function mostraralerta() {
+        alert("Por seguridad, la eliminación de platillos solo puede realizarse desde el panel del administrador.")
+    }
+</script>
+
+{% endblock %}
