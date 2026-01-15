@@ -2,7 +2,7 @@
 
 **OrderFlow** es un sistema de gestión de ventas (POS) de código abierto diseñado específicamente para optimizar la operación de restaurantes, cafeterías y otros negocios gastronómicos.
 
-![Screenshot del portal web del sistema](https://github.com/Cavalier556/orderflow/blob/36f236433ca6c99f624a222317742b8e7429e7b5/sistemaInicio.png)
+![Screenshot del portal web del sistema](https://github.com/Cavalier556/orderflow/blob/df07a4aae12260a3d5fe3b4079960bab95c6407c/sistemaInicio.png)
 
 
 ## Características principaless
