@@ -10,4 +10,7 @@ urlpatterns = [
     path('mesas/<int:pk>/add_pago/', views.add_pago),
     path('mesas/<int:pk>/pago/<int:pk_pago>/delete_pago/', views.delete_pago),
     path('mesas/<int:pk>/archivar/', views.archivar_mesa),
+
+    path('ventas/', views.lista_archivo, name='archivo'),
+     path('reporte/', views.ver_reporte, name='reporte'),
 ]

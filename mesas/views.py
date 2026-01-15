@@ -3,9 +3,10 @@ from django.shortcuts import render, redirect
 from django.views.generic.list import ListView
 from django.views.generic.edit import CreateView, UpdateView, DeleteView
 from django.views.decorators.http import require_http_methods
-from django.db.models import Sum, F
+from django.db.models import Sum, F, Count
 from django.contrib.auth.decorators import login_required
 from django.urls import reverse_lazy
+from django.utils import timezone
 from django.contrib.auth.mixins import LoginRequiredMixin
 
 from .models import Mesa, MesaDetalle, Plato, Pago
@@ -122,3 +123,59 @@ def delete_pago(request, pk, pk_pago):
     response = HttpResponse(status=303) # No Content
     response['HX-Redirect'] = f'/mesas/{pk}/'
     return response
+
+
+
+##ARCHIVO
+@login_required
+def lista_archivo(request):
+    mesas = Mesa.objects.filter(pagada=True).order_by('-id').prefetch_related('pagos').all()
+
+    data = []
+
+    for mesa in mesas:
+        data.append({
+            'id': mesa.id,
+            'numero': mesa.numero,
+            'fecha': mesa.fecha,
+            'pagos': [
+                {'tipo': p.tipo.nombre, 'monto': float(p.monto)} 
+                for p in mesa.pagos.all()
+            ]
+        })
+
+    context = {
+        'mesas': data,
+    }
+
+    return render(request, 'archivo/index.jinja2', context)
+
+
+@login_required
+def ver_reporte(request):
+    hoy = timezone.now().date()
+    pagos = Pago.objects.filter(fecha__date=hoy).select_related('tipo')
+
+    subtotales = (
+        pagos
+        .values('tipo__nombre')
+        .annotate(total=Sum('monto'))
+        .order_by('tipo__nombre')
+    )
+
+    print(subtotales)
+
+    gran_total = pagos.aggregate(total=Sum('monto'))['total'] or 0
+
+    metrics = pagos.aggregate(
+        total_pagos=Count('id'),
+        total_mesas=Count('mesa', distinct=True) 
+    )
+
+    context = {
+        'pagos':pagos,
+        'subtotales':subtotales,
+        'gran_total':gran_total,
+        'metrics':metrics
+    }
+    return render(request, 'reporte/index.jinja2', context)
