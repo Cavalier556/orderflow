@@ -9,6 +9,7 @@
 * **Gestión de Mesas:** Visualiza las mesas activas y el monto total pendiente.
 * **Gestión de Platillos:** Crea platillos para tenerlos en tu menú.
 * **Impresión de Pedidos:** Obtén un PDF en tamaño tiquetera para imprimirlos rápidamente.
+* **Dividir Cuentas:** Separa una cuenta en dos para facilitar pagos por persona.
 * **Registro de Pagos:** Crea tipos de pagos e ingresa los pagos recibidos para las mesas.
 * **Archivado de Pedidos:** Archiva las mesas pagadas para verlas en el historial de ventas.
 

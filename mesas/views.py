@@ -1,4 +1,4 @@
-from django.http import HttpResponse, FileResponse
+from django.http import HttpResponse, FileResponse, QueryDict
 from django.shortcuts import render, redirect
 from django.views.generic.list import ListView
 from django.views.generic.edit import CreateView, UpdateView, DeleteView
@@ -87,7 +87,22 @@ def archivar_mesa(request, pk):
     mesa = Mesa.objects.get(id=pk)
     mesa.pagada = True
     mesa.save()
+
     response = HttpResponse(status=303) # No Content
+    response['HX-Redirect'] = '/mesas/'
+    return response
+
+@login_required
+@require_http_methods(["PUT"])
+def dividir_mesa(request, pk):
+    platos_seleccionados = QueryDict(request.body).getlist('platos_seleccionados')
+
+    mesa_original = Mesa.objects.get(pk=pk)
+    nueva_mesa = Mesa.objects.create(numero=f"{mesa_original.numero}A")
+
+    MesaDetalle.objects.filter(id__in=platos_seleccionados).update(mesa=nueva_mesa)
+
+    response = HttpResponse(status=303)
     response['HX-Redirect'] = '/mesas/'
     return response
 
@@ -162,8 +177,6 @@ def ver_reporte(request):
         .annotate(total=Sum('monto'))
         .order_by('tipo__nombre')
     )
-
-    print(subtotales)
 
     gran_total = pagos.aggregate(total=Sum('monto'))['total'] or 0
 
